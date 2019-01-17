@@ -43,6 +43,7 @@ defmodule Api.MixProject do
       {:plug_cowboy, "~> 2.0"},
       #
       {:bcrypt_elixir, "~> 1.1"},
+      {:corsica, "~> 1.1"},
     ]
   end
 

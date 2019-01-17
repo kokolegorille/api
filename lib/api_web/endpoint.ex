@@ -40,5 +40,9 @@ defmodule ApiWeb.Endpoint do
     key: "_api_key",
     signing_salt: "YwhpF6Or"
 
+  plug Corsica,
+    origins: "http://localhost:8080",
+    log: [rejected: :error, invalid: :warn, accepted: :debug]
+
   plug ApiWeb.Router
 end
