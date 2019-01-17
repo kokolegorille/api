@@ -9,3 +9,9 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+Api.Accounts.create_user(%{
+  name: "admin",
+  email: "admin@example.local",
+  password: "secret"
+  })

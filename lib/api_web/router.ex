@@ -5,7 +5,21 @@ defmodule ApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :api_auth do
+    plug(ApiWeb.Plug.VerifyHeader, realm: "Bearer")
+  end
+
   scope "/api", ApiWeb do
     pipe_through :api
+
+    post("/registrations", RegistrationController, :create)
+    post("/authentication", AuthenticationController, :create)
+
+    resources "/users", UserController, except: [:new, :edit]
+
+    # Secure API
+    pipe_through(:api_auth)
+    patch("/authentication/refresh", AuthenticationController, :refresh)
+    delete("/authentication", AuthenticationController, :delete)
   end
 end
