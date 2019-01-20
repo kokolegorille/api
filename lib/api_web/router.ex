@@ -22,4 +22,8 @@ defmodule ApiWeb.Router do
     patch("/authentication/refresh", AuthenticationController, :refresh)
     delete("/authentication", AuthenticationController, :delete)
   end
+
+  scope "/", ApiWeb do
+    get "/*path", StaticController, :index
+  end
 end

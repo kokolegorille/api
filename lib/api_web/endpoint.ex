@@ -41,7 +41,9 @@ defmodule ApiWeb.Endpoint do
     signing_salt: "YwhpF6Or"
 
   plug Corsica,
-    origins: "http://localhost:8080",
+    origins: "http://localhost:8000",
+    # origins: "*",
+    allow_headers: ["accept", "content-type"],
     log: [rejected: :error, invalid: :warn, accepted: :debug]
 
   plug ApiWeb.Router

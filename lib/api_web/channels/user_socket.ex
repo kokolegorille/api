@@ -3,6 +3,7 @@ defmodule ApiWeb.UserSocket do
 
   ## Channels
   # channel "room:*", ApiWeb.RoomChannel
+  channel "system", ApiWeb.SystemChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
