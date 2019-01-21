@@ -5,6 +5,14 @@ defmodule ApiWeb.Endpoint do
     websocket: true,
     longpoll: false
 
+  # Code reloading can be explicitly enabled under the
+  # :code_reloader configuration of your endpoint.
+  if code_reloading? do
+    socket("/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket)
+    plug(Phoenix.LiveReloader)
+    plug Phoenix.CodeReloader
+  end
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
@@ -14,12 +22,6 @@ defmodule ApiWeb.Endpoint do
     from: :api,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
-
-  # Code reloading can be explicitly enabled under the
-  # :code_reloader configuration of your endpoint.
-  if code_reloading? do
-    plug Phoenix.CodeReloader
-  end
 
   plug Plug.RequestId
   plug Plug.Logger
@@ -40,10 +42,10 @@ defmodule ApiWeb.Endpoint do
     key: "_api_key",
     signing_salt: "YwhpF6Or"
 
+  # Allow reason react client to access api.
   plug Corsica,
     origins: "http://localhost:8000",
-    # origins: "*",
-    allow_headers: ["accept", "content-type"],
+    allow_headers: ["accept"],
     log: [rejected: :error, invalid: :warn, accepted: :debug]
 
   plug ApiWeb.Router

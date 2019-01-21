@@ -11,7 +11,25 @@ config :api, ApiWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: []
+  watchers: [
+    yarn: [
+      "start",
+      cd: Path.expand("../assets", __DIR__)
+    ],
+    yarn: [
+      "webpack",
+      cd: Path.expand("../assets", __DIR__)
+    ]
+  ]
+
+# Watch static and templates for browser reloading.
+config :api, ApiWeb.Endpoint,
+  live_reload: [
+    patterns: [
+      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{priv/gettext/.*(po)$}
+    ]
+  ]
 
 # ## SSL Support
 #
