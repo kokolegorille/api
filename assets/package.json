@@ -15,6 +15,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@glennsl/bs-json": "^3.0.0",
+    "bs-axios": "^0.0.39",
     "phoenix": "^1.4.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

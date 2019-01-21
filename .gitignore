@@ -38,3 +38,6 @@ api-*.tar
 .DS_Store
 .elixir_ls/
 .merlin
+
+# Don't save bucklescript generated files
+*.bs.js
