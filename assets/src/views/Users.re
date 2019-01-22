@@ -27,7 +27,7 @@ module Decode = {
     Json.Decode.(field("data", list(user), json));
 };
 
-let url = "http://localhost:4000/api/users";
+let url = "http://localhost:4000/api/v1/users";
 
 /* let fetchUsers = () =>
   Js.Promise.(

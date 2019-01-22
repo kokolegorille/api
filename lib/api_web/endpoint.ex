@@ -44,8 +44,8 @@ defmodule ApiWeb.Endpoint do
 
   # Allow reason react client to access api.
   plug Corsica,
-    origins: "http://localhost:8000",
-    allow_headers: ["accept"],
+    origins: "http://localhost:8080",
+    allow_headers: ["accept", "content-type", "authorization"],
     log: [rejected: :error, invalid: :warn, accepted: :debug]
 
   plug ApiWeb.Router

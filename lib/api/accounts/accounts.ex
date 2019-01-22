@@ -4,8 +4,8 @@ defmodule Api.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Api.Repo
 
+  alias Api.Repo
   alias Api.Accounts.User
 
   @doc """
@@ -132,5 +132,38 @@ defmodule Api.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  @doc """
+  Authenticate a User.
+
+  ## Examples
+
+      iex> authenticate(%{"name" => "name", "password" => "good_password"})
+      true
+
+      iex> authenticate(%{"name" => "name", "password" => "bad_password"})
+      false
+
+  """
+  def authenticate(%{name: name, password: password}),
+    do: authenticate(%{"name" => name, "password" => password})
+
+  def authenticate(%{"name" => name, "password" => password}) do
+    user = get_user_by_name(name)
+
+    case check_password(user, password) do
+      true -> {:ok, user}
+      _ -> {:error, "Invalid username/password combination."}
+    end
+  end
+
+  def authenticate(_), do: {:error, "Invalid username/password combination."}
+
+  defp check_password(user, password) do
+    case user do
+      nil -> Bcrypt.no_user_verify()
+      _ -> Bcrypt.verify_pass(password, user.password_hash)
+    end
   end
 end

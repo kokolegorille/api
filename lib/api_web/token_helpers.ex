@@ -10,7 +10,7 @@ defmodule ApiWeb.TokenHelpers do
   @max_age 7 * 24 * 3600
 
   @spec sign(term) :: String.t()
-  def sign(user), do: Phoenix.Token.sign(Endpoint, @salt, user)
+  def sign(user), do: Phoenix.Token.sign(Endpoint, @salt, user.id)
 
   @spec verify_token(String.t()) :: {:ok, integer} | {:error, term}
   def verify_token(token), do: Phoenix.Token.verify(Endpoint, @salt, token, max_age: @max_age)

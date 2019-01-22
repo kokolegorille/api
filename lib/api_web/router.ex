@@ -12,15 +12,17 @@ defmodule ApiWeb.Router do
   scope "/api", ApiWeb do
     pipe_through :api
 
-    post("/registrations", RegistrationController, :create)
-    post("/authentication", AuthenticationController, :create)
+    scope "/v1" do
+      post("/registrations", RegistrationController, :create)
+      post("/authentication", AuthenticationController, :create)
 
-    resources "/users", UserController, except: [:new, :edit]
+      resources "/users", UserController, except: [:new, :edit]
 
-    # Secure API
-    pipe_through(:api_auth)
-    patch("/authentication/refresh", AuthenticationController, :refresh)
-    delete("/authentication", AuthenticationController, :delete)
+      # Secure API
+      pipe_through(:api_auth)
+      patch("/authentication/refresh", AuthenticationController, :refresh)
+      delete("/authentication", AuthenticationController, :delete)
+    end
   end
 
   scope "/", ApiWeb do

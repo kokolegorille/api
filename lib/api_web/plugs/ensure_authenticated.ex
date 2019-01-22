@@ -11,8 +11,8 @@ defmodule ApiWeb.Plug.EnsureAuthenticated do
   def call(conn, _opts) do
     token = conn.assigns[:token]
 
-    with {:ok, user} <- verify_token(token) do
-      conn |> assign(:user, user)
+    with {:ok, user_id} <- verify_token(token) do
+      conn |> assign(:user_id, user_id)
     else
       {:error, _reason} ->
         conn
