@@ -3,14 +3,18 @@ defmodule ApiWeb.LobbyChannel do
   use ApiWeb, :channel
   require Logger
   @name __MODULE__
+  alias ApiWeb.Presence
 
   def join("lobby", _params, socket) do
     send(self(), :after_join)
     {:ok, socket}
   end
 
-  ## HANDLE_INFO
   def handle_info(:after_join, socket) do
+    push(socket, "presence_state", Presence.list(socket))
+    {:ok, _} = Presence.track(socket, socket.assigns.user_id, %{
+      online_at: System.system_time(:second)
+    })
     {:noreply, socket}
   end
 

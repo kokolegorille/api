@@ -11,9 +11,9 @@ defmodule Api.Application do
       # Start the Ecto repository
       Api.Repo,
       # Start the endpoint when the application starts
-      ApiWeb.Endpoint
-      # Starts a worker by calling: Api.Worker.start_link(arg)
-      # {Api.Worker, arg},
+      ApiWeb.Endpoint,
+      # Start presence
+      ApiWeb.Presence,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

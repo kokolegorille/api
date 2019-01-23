@@ -17,7 +17,7 @@ defmodule ApiWeb.UserChannel do
     :ok
   end
 
-  # Private
+  # PRIVATE
 
   defp log(message), do: Logger.debug(fn -> message end)
 end
