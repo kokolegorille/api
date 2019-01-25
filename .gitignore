@@ -35,6 +35,7 @@ api-*.tar
 # variables.
 /config/*.secret.exs
 
+node_modules
 .DS_Store
 .elixir_ls/
 .merlin
