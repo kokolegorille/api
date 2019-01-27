@@ -1,1 +1,12 @@
-body {color: green;}
+// Body
+$body-bg: #ecf0f1;
+
+// Typography
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+main {
+    margin-top: 2em;
+}

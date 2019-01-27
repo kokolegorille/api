@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@glennsl/bs-json": "^3.0.0",
+    "bootstrap": "^4.2.1",
     "bs-axios": "^0.0.39",
     "phoenix": "^1.4.0",
     "react": "^16.2.0",

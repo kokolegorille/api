@@ -6,6 +6,6 @@ let make = (~href, ~label, _children) => {
         ReactEvent.Mouse.preventDefault(e);
         ReasonReact.Router.push(href);
     };
-    <a href onClick> (label()) </a>;
+    <a href onClick className="nav-link"> (label()) </a>;
     },
 };
