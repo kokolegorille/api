@@ -4,7 +4,7 @@ let apiRoot = "http://localhost:4000/api/v1";
 authHeaders should be build with the makeConfig helper
 https://github.com/meafmira/bs-axios/blob/master/src/axios.re
 */
-let authHeaders = token => {
+let authConfig = token => {
   /* DO NOT ADD KEY headers: IT IS ADDED BY MAKECONFIG! */
   let headers = {
     "Accept": "application/json",
@@ -38,7 +38,7 @@ let signUp = data =>
 
 let refreshToken = token => 
   Js.Promise.(
-    Axios.patchDatac(apiRoot ++ "/authentication/refresh", {"session": "session"}, authHeaders(token))
+    Axios.patchDatac(apiRoot ++ "/authentication/refresh", {"session": "session"}, authConfig(token))
     |> then_(
       response => response##data 
         |> Decode.session 

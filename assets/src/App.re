@@ -54,7 +54,10 @@ let reducer = (action, state) => {
       ) 
     )
   | RefreshSucceed(sessionData) => RR.UpdateWithSideEffects(
-    {...state, loading: false, isAuthenticated: true, sessionData: Some(sessionData)},
+    {
+      ...state, 
+      loading: false, isAuthenticated: true, sessionData: Some(sessionData)
+    },
     _self => AuthService.saveToken(sessionData.token)
   )
   | RefreshFailed => RR.UpdateWithSideEffects(
@@ -62,11 +65,6 @@ let reducer = (action, state) => {
     _self => AuthService.removeToken()
   )};
 };
-
-let formatTimestamp: float => string = timestamp => 
-  timestamp
-  -> Js.Date.fromFloat
-  -> Js.Date.toLocaleTimeString;
 
 let component = RR.reducerComponent("App");
 
@@ -82,38 +80,43 @@ let make = _children => {
     }
   },
   render: ({send, state}) => {
-    <div>
-      <header>
-        {
-          if (state.loading) {
-            <p>(str("Loading"))</p>
-          } else {
-            ReasonReact.null
-          }
-        }
-        {
-          switch (state.bootupTime) {
-          | Some(bootupTime) => <p>(str(formatTimestamp(bootupTime)))</p>
-          | None => <p>(str("Bootup time is not set!"))</p>
-          };
-        }
-      </header>
-      <main role="main" className="container">
-        {
-          switch (state.isAuthenticated) {
-          | true => 
-            <div>
-              <button onClick=(_event => send(Logout)) className="btn btn-primary">
-                (str("Log Out"))
-              </button>
-              <Member />
-            </div>
-          | false => 
-            <SignIn handleSubmit=(values => send(Login(values))) />
-          }
-        }
-      </main>
-    </div>
+    {
+      if (state.loading) {
+        <p>(str("Loading..."))</p>
+      } else {
+        <div>
+          <header>
+            
+            {
+              switch (state.bootupTime) {
+              | Some(bootupTime) => 
+                <p>(str(Tools.formatTimestamp(bootupTime)))</p>
+              | None => 
+                <p>(str("Bootup time is not set!"))</p>
+              };
+            }
+          </header>
+          <main role="main" className="container">
+            {
+              switch (state.isAuthenticated) {
+              | true => 
+                <div>
+                  <button onClick=(_event => send(Logout)) className="btn btn-primary">
+                    (str("Log Out"))
+                  </button>
+                  <Member />
+                </div>
+              | false => 
+                <div>
+                  <SignIn handleSubmit=(values => send(Login(values))) />
+                  <SignUp handleSubmit=(values => send(Login(values))) />
+                </div>
+              }
+            }
+          </main>
+        </div>
+      }
+    }
   }
 };
 

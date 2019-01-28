@@ -14,6 +14,7 @@ defmodule Api.Accounts.User do
 
   @required_fields ~w(name email)a
   @registration_fields ~w(password)a
+  @email_regex ~r/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
   @doc false
   def changeset(%User{} = user, attrs) do
@@ -21,7 +22,7 @@ defmodule Api.Accounts.User do
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
     |> validate_length(:name, min: 1, max: 32)
-    |> validate_format(:email, ~r/@/)
+    |> validate_format(:email, @email_regex)
     |> unique_constraint(:name, message: "Name already taken")
     |> unique_constraint(:email, message: "Email already taken")
   end

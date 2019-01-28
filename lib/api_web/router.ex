@@ -13,7 +13,7 @@ defmodule ApiWeb.Router do
     pipe_through :api
 
     scope "/v1" do
-      post("/registrations", RegistrationController, :create)
+      post("/registration", RegistrationController, :create)
       post("/authentication", AuthenticationController, :create)
 
       resources "/users", UserController, except: [:new, :edit]
