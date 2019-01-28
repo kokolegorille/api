@@ -29,6 +29,8 @@ defmodule ApiWeb.Plug.VerifyHeader do
   end
 
   defp fetch_token_from_header(conn, opts) do
+    # Keys in the header are lower case!
+    # Even if send as Authorization!
     headers = get_req_header(conn, "authorization")
     fetch_token_from_header(conn, opts, headers)
   end

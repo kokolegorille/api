@@ -70,15 +70,10 @@ let getValue = event => ReactEvent.Form.target(event)##value;
 
 let preventDefault = event => ReactEvent.Synthetic.preventDefault(event);
 
-type user = {
-  id: int,
-  name: string
-};
+/* IMPORT ABSTRACT TYPES */
 
-type sessionData = {
-  currentUser: user, 
-  token: string,
-};
+type user = Abstract.User.t;
+type sessionData = Abstract.SessionData.t;
 
 type state = 
   | Display
@@ -89,32 +84,6 @@ type action =
   | Load(SpecialForm.state)
   | Loaded(sessionData)
   | Failed(string);
-
-module Decode = {
-  let currentUser = json =>
-    Json.Decode.{
-      id: field("id", int, json),
-      name: field("name", string, json),
-    };
-	let session = json =>
-		Json.Decode.{
-      currentUser: field("user", currentUser, json),
-      token: field("token", string, json),
-    };
-};
-
-let url = "http://localhost:4000/api/v1/authentication";
-
-let postSession = (data) =>
-Js.Promise.(
-  Axios.postData(url, data)
-  |> then_(
-    response => response##data 
-      |> Decode.session 
-      |> (session => Some(session) |> Js.Promise.resolve)
-  )
-  |> catch(_err => resolve(None))
-);
 
 let component = ReasonReact.reducerComponent("Form");
 let make = (~handleSubmit, _children) => {
@@ -129,7 +98,7 @@ let make = (~handleSubmit, _children) => {
         Loading,
         self => 
           Js.Promise.(
-            postSession({"session": {"name": name, "password": password}})
+            Api.signIn({"session": {"name": name, "password": password}})
             |> then_(result => 
               switch (result) {
                 | Some(sessionData) =>
