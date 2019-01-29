@@ -14,19 +14,26 @@ let authConfig = token => {
   Axios.makeConfig(~headers=headers, ~withCredentials=true, ());
 };
 
+external promiseErrorToJsObj : Js.Promise.error => Js.t('a) = "%identity";
+
 let signIn = data =>
   Js.Promise.(
     Axios.postData(apiRoot ++ "/authentication", data)
     |> then_(
       response => response##data 
         |> Decode.session 
-        |> (session => Some(session) |> Js.Promise.resolve)
+        |> (session => Belt.Result.Ok(session) |> Js.Promise.resolve)
     )
-    |> catch(err => {
-      Js.log(err);
-      resolve(None)
+    |> catch(error => {
+      /* 
+      Check https://github.com/meafmira/bs-axios for error handling
+       */
+      let error = error |> promiseErrorToJsObj;
+      let errorMsg = error##response##data##error;
+      resolve(Belt.Result.Error(errorMsg));
     })
   ); 
+  
 
 let signUp = data =>
   Js.Promise.(
@@ -34,9 +41,23 @@ let signUp = data =>
     |> then_(
       response => response##data 
         |> Decode.session 
-        |> (session => Some(session) |> Js.Promise.resolve)
+        |> (session => Belt.Result.Ok(session) |> Js.Promise.resolve)
     )
-    |> catch(_err => resolve(None))
+    |> catch(error => {
+      let error = error |> promiseErrorToJsObj;
+      /* 
+      The error.response.data is a js.t with this shape...
+      It comes from changeset error!
+      {
+        errors: [
+          key: value
+        ]
+      }
+       */
+      let errorObj = error##response##data;
+      Js.log(errorObj);
+      resolve(Belt.Result.Error(errorObj));
+    })
   );
 
 let refreshToken = token => 
@@ -45,8 +66,12 @@ let refreshToken = token =>
     |> then_(
       response => response##data 
         |> Decode.session 
-        |> (session => Some(session) |> Js.Promise.resolve)
+        |> (session => Belt.Result.Ok(session) |> Js.Promise.resolve)
     )
-    |> catch(_err => resolve(None))
+    |> catch(error => {
+      let error = error |> promiseErrorToJsObj;
+      let errorMsg = error##response##data##error;
+      resolve(Belt.Result.Error(errorMsg));
+    })
   );
 

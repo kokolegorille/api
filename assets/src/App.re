@@ -1,11 +1,22 @@
 
 type sessionData = Abstract.SessionData.t;
 
+type signMode = 
+  | SignInMode
+  | SignUpMode;
+
+let toggleLabelOfSignMode(signMode) =
+  switch(signMode) {
+  | SignInMode => "or Sign Up"
+  | SignUpMode => "or Sign In"
+  };
+
 type state = {
   bootupTime: option(float),
   isAuthenticated: bool,
   sessionData: option(sessionData),
   loading: bool,
+  signMode: signMode,
 }
 
 type action = 
@@ -14,13 +25,15 @@ type action =
   | Logout
   | RefreshToken(string)
   | RefreshSucceed(sessionData)
-  | RefreshFailed;
+  | RefreshFailed
+  | ToggleSignMode;
 
 let initialState = {
   bootupTime: None,
   isAuthenticated: false,
   sessionData: None,
   loading: false,
+  signMode: SignInMode,
 }
 
 module RR = ReasonReact;
@@ -44,9 +57,9 @@ let reducer = (action, state) => {
         Api.refreshToken(token)
         |> then_(result => 
           switch (result) {
-            | Some(sessionData) =>
+            | Belt.Result.Ok(sessionData) =>
               resolve(self.send(RefreshSucceed(sessionData)))
-            | None => 
+            | Belt.Result.Error(_errorMsg) => 
               resolve(self.send(RefreshFailed))
             }
         )
@@ -63,7 +76,15 @@ let reducer = (action, state) => {
   | RefreshFailed => RR.UpdateWithSideEffects(
     {...state, loading: false, isAuthenticated: false, sessionData: None},
     _self => AuthService.removeToken()
-  )};
+    )
+  | ToggleSignMode => {
+      let newSignMode = switch (state.signMode) {
+      | SignInMode => SignUpMode
+      | SignUpMode => SignInMode
+      };
+      RR.Update({...state, signMode: newSignMode});
+    }
+  }
 };
 
 let component = RR.reducerComponent("App");
@@ -108,8 +129,17 @@ let make = _children => {
                 </div>
               | false => 
                 <div>
-                  <SignIn handleSubmit=(values => send(Login(values))) />
-                  <SignUp handleSubmit=(values => send(Login(values))) />
+                  {
+                    switch (state.signMode) {
+                    | SignInMode => 
+                      <SignIn handleSubmit=(values => send(Login(values))) />
+                    | SignUpMode => 
+                      <SignUp handleSubmit=(values => send(Login(values))) />
+                    }
+                  }
+                  <button onClick=(_event => send(ToggleSignMode)) className="btn btn-link">
+                    (str(toggleLabelOfSignMode(state.signMode)))
+                  </button>
                 </div>
               }
             }

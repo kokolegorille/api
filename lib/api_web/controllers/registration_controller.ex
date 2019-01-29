@@ -23,7 +23,7 @@ defmodule ApiWeb.RegistrationController do
   end
   def create(conn, _params) do
     conn
-    |> put_status(:unauthorized)
+    |> put_status(:unprocessable_entity)
     |> put_view(AuthenticationView)
     |> render("error.json")
   end

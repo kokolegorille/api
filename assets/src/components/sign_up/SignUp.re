@@ -29,7 +29,7 @@ module Configuration = {
 let minLengthPassord = (value, _values) => String.length(value) >= 6;
 let validateEmail = (value, _values) => 
   /* Do not put // in the regex! */
-  Js.Re.fromString("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
+  Js.Re.fromString("^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$")
   |> Js.Re.test(value);
 
 let emptyMsg = "Field is required";
@@ -116,10 +116,10 @@ let make = (~handleSubmit, _children) => {
             Api.signUp({"user": {"name": name, "email": email, "password": password}})
             |> then_(result => 
               switch (result) {
-                | Some(sessionData) =>
+                | Belt.Result.Ok(sessionData) =>
                   resolve(self.send(Loaded(sessionData)))
-                | None => 
-                  resolve(self.send(Failed("Wrong combination of name/password!")))
+                | Belt.Result.Error(_errorObj) => 
+                  resolve(self.send(Failed("Could not create account.")))
                 }
             )
             |> ignore

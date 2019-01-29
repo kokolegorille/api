@@ -101,10 +101,10 @@ let make = (~handleSubmit, _children) => {
             Api.signIn({"session": {"name": name, "password": password}})
             |> then_(result => 
               switch (result) {
-                | Some(sessionData) =>
+                | Belt.Result.Ok(sessionData) =>
                   resolve(self.send(Loaded(sessionData)))
-                | None => 
-                  resolve(self.send(Failed("Wrong combination of name/password!")))
+                | Belt.Result.Error(errorMsg) => 
+                  resolve(self.send(Failed(errorMsg)))
                 }
             )
             |> ignore
