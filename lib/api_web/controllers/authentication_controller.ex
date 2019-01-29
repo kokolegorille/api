@@ -10,7 +10,9 @@ defmodule ApiWeb.AuthenticationController do
 
   action_fallback(FallbackController)
 
-  plug(:scrub_params, "session" when action in [:create])
+  # Uncomment for strict check!
+  # plug(:scrub_params, "session" when action in [:create])
+
   plug(EnsureAuthenticated when action in [:refresh, :delete])
 
   def create(conn, %{"session" => session_params}) do
@@ -20,6 +22,11 @@ defmodule ApiWeb.AuthenticationController do
       |> put_status(:created)
       |> render("show.json", token: token, user: user)
     end
+  end
+  def create(conn, _params) do
+    conn
+    |> put_status(:unauthorized)
+    |> render("error.json")
   end
 
   def refresh(conn, _params) do

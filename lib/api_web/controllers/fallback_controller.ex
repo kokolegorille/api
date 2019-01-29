@@ -1,7 +1,7 @@
 defmodule ApiWeb.FallbackController do
   use ApiWeb, :controller
 
-  alias ApiWeb.{ChangesetView, ErrorView}
+  alias ApiWeb.{AuthenticationView, ChangesetView}
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
@@ -13,14 +13,14 @@ defmodule ApiWeb.FallbackController do
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)
-    |> put_view(ErrorView)
-    |> render(:"404")
+    |> put_view(AuthenticationView)
+    |> render("error.json")
   end
 
   def call(conn, {:error, reason}) do
     conn
-    |> put_status(:not_found)
-    |> put_view(ErrorView)
-    |> render("error_with_reason.json", reason: reason)
+    |> put_status(:unauthorized)
+    |> put_view(AuthenticationView)
+    |> render("forbidden.json", error: reason)
   end
 end

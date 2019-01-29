@@ -22,8 +22,11 @@ let signIn = data =>
         |> Decode.session 
         |> (session => Some(session) |> Js.Promise.resolve)
     )
-    |> catch(_err => resolve(None))
-  );
+    |> catch(err => {
+      Js.log(err);
+      resolve(None)
+    })
+  ); 
 
 let signUp = data =>
   Js.Promise.(

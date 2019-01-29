@@ -9,7 +9,8 @@ defmodule ApiWeb.RegistrationController do
 
   action_fallback(FallbackController)
 
-  plug(:scrub_params, "user" when action in [:create])
+  # Uncomment for strict check!
+  # plug(:scrub_params, "user" when action in [:create])
 
   def create(conn, %{"user" => params}) do
     with {:ok, user} <- Accounts.create_user(params),
@@ -19,5 +20,11 @@ defmodule ApiWeb.RegistrationController do
       |> put_view(AuthenticationView)
       |> render("show.json", token: token, user: user)
     end
+  end
+  def create(conn, _params) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(AuthenticationView)
+    |> render("error.json")
   end
 end
