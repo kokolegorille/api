@@ -39,7 +39,7 @@ let initialState = {
 module RR = ReasonReact;
 let str = RR.string;
 
-let reducer = (action, state) => {
+let reducer = (action, state) => 
   switch (action) {
   | AppBootup => RR.Update({...state, bootupTime: Some(Js.Date.now())})
   | Login(sessionData) => RR.UpdateWithSideEffects(
@@ -84,7 +84,6 @@ let reducer = (action, state) => {
       };
       RR.Update({...state, signMode: newSignMode});
     }
-  }
 };
 
 let component = RR.reducerComponent("App");
@@ -101,51 +100,58 @@ let make = _children => {
     }
   },
   render: ({send, state}) => {
-    {
-      if (state.loading) {
-        <p>(str("Loading..."))</p>
-      } else {
-        <div>
-          <header>
-            
-            {
-              switch (state.bootupTime) {
-              | Some(bootupTime) => 
-                <p>(str(Tools.formatTimestamp(bootupTime)))</p>
-              | None => 
-                <p>(str("Bootup time is not set!"))</p>
-              };
-            }
-          </header>
-          <main role="main" className="container">
-            {
-              switch (state.isAuthenticated) {
-              | true => 
-                <div>
-                  <button onClick=(_event => send(Logout)) className="btn btn-primary">
-                    (str("Log Out"))
-                  </button>
-                  <Member />
-                </div>
-              | false => 
-                <div>
-                  {
-                    switch (state.signMode) {
-                    | SignInMode => 
-                      <SignIn handleSubmit=(values => send(Login(values))) />
-                    | SignUpMode => 
-                      <SignUp handleSubmit=(values => send(Login(values))) />
-                    }
+    if (state.loading) {
+      <p>(str("Loading..."))</p>
+    } else {
+      <div>
+        <header>
+          {
+            switch (state.bootupTime) {
+            | Some(bootupTime) => 
+              <p>(str(Tools.formatTimestamp(bootupTime)))</p>
+            | None => 
+              <p>(str("Bootup time is not set!"))</p>
+            };
+          }
+        </header>
+        <main role="main" className="container">
+          {
+            switch (state.isAuthenticated) {
+            | true => 
+              <div>
+                <button onClick=(_event => send(Logout)) className="btn btn-link">
+                  (str("Log Out"))
+                </button>
+                {
+                  switch (state.sessionData) {
+                  | Some(sessionData) => 
+                    <Member 
+                      token={sessionData.token} 
+                      userName={sessionData.currentUser.name}
+                      userId={sessionData.currentUser.id}
+                    />
+                  | None => RR.null
                   }
-                  <button onClick=(_event => send(ToggleSignMode)) className="btn btn-link">
-                    (str(toggleLabelOfSignMode(state.signMode)))
-                  </button>
-                </div>
-              }
+                }
+              </div>
+            | false => 
+              <div>
+                {
+                  switch (state.signMode) {
+                  | SignInMode => 
+                    <SignIn handleSubmit=(values => send(Login(values))) />
+                  | SignUpMode => 
+                    <SignUp handleSubmit=(values => send(Login(values))) />
+                  }
+                }
+                <button onClick=(_event => send(ToggleSignMode)) className="btn btn-link">
+                  (str(toggleLabelOfSignMode(state.signMode)))
+                </button>
+              </div>
             }
-          </main>
-        </div>
-      }
+          }
+        </main>
+      </div>
     }
   }
 };

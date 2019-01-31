@@ -164,7 +164,7 @@ let make = (~handleSubmit, _children) => {
                 />
                 <div className="invalid-feedback"> (getError(Password, form.errors)) </div>
               </div>
-              <button className="btn btn-primary"> (str("Submit")) </button>
+              <button className="btn btn-primary"> (str("Sign In")) </button>
             </form>
         )
       />

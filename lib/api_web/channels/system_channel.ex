@@ -22,7 +22,7 @@ defmodule ApiWeb.SystemChannel do
 
   def handle_info(:after_join, socket) do
     push(socket, "presence_state", Presence.list(socket))
-    {:ok, _} = Presence.track(socket, 1, %{
+    {:ok, _} = Presence.track(socket, socket.assigns.user_id, %{
       online_at: System.system_time(:second)
     })
     push(socket, "ping", %{ping_time: :os.system_time(:millisecond)})

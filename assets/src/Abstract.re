@@ -11,3 +11,12 @@ module SessionData = {
     token: string,
   };
 };
+
+module PresenceData = {
+  type t = {
+    count: int,
+    id: int,
+    online_at: int,
+    phx_ref: string,
+  }
+}

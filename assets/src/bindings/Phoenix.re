@@ -19,6 +19,7 @@ module Channel = {
   type ref = int;
   type t = {
     .
+    [@bs.get] "topic": string,
     [@bs.get] "state": string,
     [@bs.meth] "rejoinUntilConnected": unit => unit,
     [@bs.meth] "onClose": unit => unit,
