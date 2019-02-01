@@ -66,18 +66,11 @@ let make = (~token, ~userName, ~userId, _children) => {
     let handleSync = (topic, loggedInUsers) => {
       let _ = Js.log(("handleSync:" ++ topic, loggedInUsers));
 
-      /* let result = List.map(x => {
-        Js.log(x);
-        Js.log("============================>");
-        x;
-      }, loggedInUsers)
-
-      Js.log(result); */
-
       /* 
       TODO, transform loggedInUsers into a list of presence!
        */
 
+      /* self.send(UpdatePresence(topic, loggedInUsers)); */
       self.send(UpdatePresence(topic, []));
     };
 

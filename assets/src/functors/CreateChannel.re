@@ -28,10 +28,10 @@ let putOnClose = (f: Js_json.t => unit, channel) => {
 
 let joinChannel = Phoenix.Channel.join;
 
-let listBy = [%bs.raw {|
+/* let listBy = [%bs.raw {|
   (id, { metas: [first, ...rest] }) =>
     Object.assign({}, first, { id, count: rest.length + 1 })
-|}];
+|}];  */
 
 let defaultSync = (topic, list) => Js.log2(topic, list);
 
@@ -79,8 +79,13 @@ module Make = () => {
         });
 
         let _ = myPresence##onSync(() => {
-          let loggedInUsers = myPresence##list(listBy);
-          handleSync(topic, loggedInUsers);
+          Js.log(myPresence##list);
+          Js.log("------------");
+
+          /* let loggedInUsers = myPresence##list(listBy);
+          handleSync(topic, loggedInUsers); */
+
+          handleSync(topic, myPresence##list);
         });
       };
 
