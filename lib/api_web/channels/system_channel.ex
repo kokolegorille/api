@@ -46,6 +46,30 @@ defmodule ApiWeb.SystemChannel do
     {:noreply, socket}
   end
 
+  # For testing
+  def handle_in("ping", payload, socket) do
+    user_id = socket.assigns.user_id
+    timestamp = :os.system_time(:millisecond)
+    push(socket, "pong", %{ping_time: timestamp})
+
+    case payload["ping_time"] do
+      ping_time when is_number(ping_time) ->
+        lag = timestamp - ping_time
+        latency = %{user_id: user_id, lag: lag, ping_time: ping_time}
+        log("> user : #{user_id}, lag : #{latency.lag}")
+
+      _ ->
+        log("> user : #{user_id}, lag : undefined")
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_in(command, payload, socket) do
+    log("#{command} #{inspect payload}")
+    {:noreply, socket}
+  end
+
   def terminate(reason, _socket) do
     log("#{@name} > leave #{inspect(reason)}")
     :ok
