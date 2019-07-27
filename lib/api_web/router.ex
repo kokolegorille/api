@@ -26,6 +26,6 @@ defmodule ApiWeb.Router do
   end
 
   scope "/", ApiWeb do
-    get "/*path", StaticController, :index
+    get "/*path", MyStaticController, :index
   end
 end
