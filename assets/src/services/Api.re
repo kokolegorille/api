@@ -6,11 +6,11 @@ https://github.com/meafmira/bs-axios/blob/master/src/axios.re
 */
 let authConfig = token => {
   /* DO NOT ADD KEY headers: IT IS ADDED BY MAKECONFIG! */
-  let headers = {
+  let headers = Axios.Headers.fromObj({
     "Accept": "application/json",
     "Content-Type": "application/json",
     "Authorization": {j|Bearer $token|j},
-  };
+  });
   Axios.makeConfig(~headers=headers, ~withCredentials=true, ());
 };
 
