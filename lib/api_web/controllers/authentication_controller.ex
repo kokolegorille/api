@@ -30,7 +30,7 @@ defmodule ApiWeb.AuthenticationController do
   end
 
   def refresh(conn, _params) do
-    user_id = conn.assigns.user_id
+    user_id = conn.assigns.user.id
 
     with {:ok, user} <- load_user(user_id),
          token <- sign(user) do

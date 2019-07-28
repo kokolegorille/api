@@ -14,6 +14,7 @@ defmodule ApiWeb.UserSocket do
   channel "system", SystemChannel
   channel "lobby", LobbyChannel
   channel "user:*", UserChannel
+  channel "game:*", GameChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -32,8 +33,8 @@ defmodule ApiWeb.UserSocket do
   # end
 
   def connect(%{"token" => token}, socket) do
-    with {:ok, user_id} <- verify_token(token) do
-      {:ok, assign(socket, :user_id, user_id)}
+    with {:ok, user} <- verify_token(token) do
+      {:ok, assign(socket, :user, user)}
     else
       {:error, _reason} -> :error
     end
@@ -53,5 +54,5 @@ defmodule ApiWeb.UserSocket do
   # Returning `nil` makes this socket anonymous.
   # def id(_socket), do: nil
 
-  def id(socket), do: "users_socket:#{socket.assigns.user_id}"
+  def id(socket), do: "users_socket:#{socket.assigns.user.id}"
 end

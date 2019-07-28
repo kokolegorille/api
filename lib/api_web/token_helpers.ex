@@ -9,9 +9,8 @@ defmodule ApiWeb.TokenHelpers do
   # one week
   @max_age 7 * 24 * 3600
 
-  @spec sign(term) :: String.t()
-  def sign(user), do: Phoenix.Token.sign(Endpoint, @salt, user.id)
+  # This is used in authentication plug and user_socket
+  def sign(user), do: Phoenix.Token.sign(Endpoint, @salt, %{id: user.id, name: user.name})
 
-  @spec verify_token(String.t()) :: {:ok, integer} | {:error, term}
   def verify_token(token), do: Phoenix.Token.verify(Endpoint, @salt, token, max_age: @max_age)
 end

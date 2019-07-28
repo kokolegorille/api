@@ -1,11 +1,13 @@
-defmodule ApiWeb.LobbyChannel do
+defmodule ApiWeb.GameChannel do
   @moduledoc false
   use ApiWeb, :channel
   require Logger
   @name __MODULE__
   alias ApiWeb.Presence
 
-  def join("lobby", _params, socket) do
+  def join("game:" <> id, _params, socket) do
+    log("Connected to game #{id}")
+
     send(self(), :after_join)
     {:ok, socket}
   end
@@ -16,6 +18,7 @@ defmodule ApiWeb.LobbyChannel do
       name: socket.assigns.user.name,
       online_at: System.system_time(:second)
     })
+    push(socket, "ping", %{ping_time: :os.system_time(:millisecond)})
     {:noreply, socket}
   end
 
