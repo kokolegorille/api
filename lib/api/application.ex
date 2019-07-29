@@ -14,6 +14,11 @@ defmodule Api.Application do
       ApiWeb.Endpoint,
       # Start presence
       ApiWeb.Presence,
+
+      #
+      {Registry, keys: :unique, name: Registry.GameWorkers},
+      Api.Games.GameManager,
+      Api.Games.WorkerSup,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

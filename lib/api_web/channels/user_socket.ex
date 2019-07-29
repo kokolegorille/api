@@ -6,7 +6,8 @@ defmodule ApiWeb.UserSocket do
   alias ApiWeb.{
     SystemChannel,
     LobbyChannel,
-    UserChannel
+    UserChannel,
+    GameChannel
   }
 
   ## Channels

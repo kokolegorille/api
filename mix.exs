@@ -45,6 +45,7 @@ defmodule Api.MixProject do
       #
       {:bcrypt_elixir, "~> 1.1"},
       {:corsica, "~> 1.1"},
+      {:uuid, "~> 1.1"},
     ]
   end
 

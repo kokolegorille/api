@@ -30,10 +30,9 @@ defmodule ApiWeb.AuthenticationController do
   end
 
   def refresh(conn, _params) do
-    user_id = conn.assigns.user.id
-
-    with {:ok, user} <- load_user(user_id),
-         token <- sign(user) do
+    with assigned_user <- Map.get(conn.assigns, :user),
+        {:ok, user} <- load_user(assigned_user.id),
+        token <- sign(user) do
       conn
       |> put_status(:created)
       |> render("show.json", token: token, user: user)
