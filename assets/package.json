@@ -22,7 +22,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "reason-react": ">=0.7.0",
-    "yarn": "^1.17.3"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "bs-platform": "^5.0.6",
